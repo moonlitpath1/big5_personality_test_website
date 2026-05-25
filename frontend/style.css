@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+input[type="radio"]:checked + span {
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+label:has(input[type="radio"]:checked) {
+    border-color: #4f46e5;
+    background-color: #eef2ff;
+}

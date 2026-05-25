@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Prediction - Big Five Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    
+    <!-- Landing Page -->
+    <div id="landing-page" class="container mx-auto px-4 py-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-5xl font-bold text-indigo-900 mb-6">Discover Your Personality</h1>
+            <p class="text-xl text-gray-700 mb-8">Take our comprehensive Big Five personality test based on the IPIP 50-item questionnaire. Discover your unique personality type and gain insights into your behavioral patterns.</p>
+            
+            <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+                <h2 class="text-2xl font-semibold text-indigo-800 mb-4">What You'll Learn</h2>
+                <div class="grid md:grid-cols-2 gap-4 text-left">
+                    <div class="p-4 bg-indigo-50 rounded-lg">
+                        <h3 class="font-semibold text-indigo-900 mb-2">📊 Your OCEAN Scores</h3>
+                        <p class="text-gray-600">Get detailed scores for Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism</p>
+                    </div>
+                    <div class="p-4 bg-indigo-50 rounded-lg">
+                        <h3 class="font-semibold text-indigo-900 mb-2">🎯 Personality Type</h3>
+                        <p class="text-gray-600">Discover if you're Average, Reserved, Role Model, or Self-Centered based on AI prediction</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="startQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-xl transition duration-300 transform hover:scale-105">
+                Start Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Page -->
+    <div id="quiz-page" class="hidden container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex justify-between mb-2">
+                    <span class="text-sm font-medium text-indigo-700">Progress</span>
+                    <span class="text-sm font-medium text-indigo-700"><span id="progress-text">0</span>/50</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progress-bar" class="bg-indigo-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-lg shadow-xl p-8 mb-6">
+                <h2 class="text-2xl font-bold text-indigo-900 mb-6" id="question-text"></h2>
+                
+                <div class="space-y-3" id="options-container">
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-400 cursor-pointer transition duration-200">
+                        <input type="radio" name="answer" value="1" class="mr-4 w-5 h-5 text-indigo-600">
+                        <span class="text-gray-700">1 - Strongly Disagree</span>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-400 cursor-pointer transition duration-200">
+                        <input type="radio" name="answer" value="2" class="mr-4 w-5 h-5 text-indigo-600">
+                        <span class="text-gray-700">2 - Disagree</span>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-400 cursor-pointer transition duration-200">
+                        <input type="radio" name="answer" value="3" class="mr-4 w-5 h-5 text-indigo-600">
+                        <span class="text-gray-700">3 - Neutral</span>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-400 cursor-pointer transition duration-200">
+                        <input type="radio" name="answer" value="4" class="mr-4 w-5 h-5 text-indigo-600">
+                        <span class="text-gray-700">4 - Agree</span>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-400 cursor-pointer transition duration-200">
+                        <input type="radio" name="answer" value="5" class="mr-4 w-5 h-5 text-indigo-600">
+                        <span class="text-gray-700">5 - Strongly Agree</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between">
+                <button id="prev-btn" onclick="previousQuestion()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Previous
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div id="results-page" class="hidden container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-indigo-900 mb-8 text-center">Your Personality Analysis</h1>
+            
+            <!-- Personality Type Card -->
+            <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+                <h2 class="text-3xl font-bold text-indigo-800 mb-4 text-center" id="personality-type"></h2>
+                <p class="text-lg text-gray-700 text-center" id="personality-description"></p>
+            </div>
+
+            <!-- Big Five Scores Chart -->
+            <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+                <h3 class="text-2xl font-semibold text-indigo-800 mb-6 text-center">Your Big Five Scores</h3>
+                <canvas id="personality-chart"></canvas>
+            </div>
+
+            <!-- Retry Button -->
+            <div class="text-center">
+                <button onclick="retakeQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                    Retake Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
+            <p class="text-xl font-semibold text-gray-700">Analyzing your personality...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
